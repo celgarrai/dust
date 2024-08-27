@@ -9,6 +9,7 @@ def load_model():
     return tf.keras.models.load_model("model_classification_dust.h5")
 
 model = load_model()
+model.summary()
 
 # Fonction pour prétraiter l'image
 def preprocess_image(image):
@@ -19,6 +20,10 @@ def preprocess_image(image):
         image = np.array(image)  # Convertir l'image en tableau numpy
         image = image / 255.0  # Normaliser l'image
         image = np.expand_dims(image, axis=0)  # Ajouter une dimension pour le batch
+
+        # Afficher les dimensions pour déboguer
+        st.write(f"Dimensions après prétraitement : {image.shape}")
+
         return image
     except Exception as e:
         st.error(f"Erreur lors du prétraitement de l'image : {e}")
