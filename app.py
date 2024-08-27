@@ -2,6 +2,7 @@ import streamlit as st
 from PIL import Image
 import numpy as np
 import tensorflow as tf
+import io
 
 # Charger le modèle TensorFlow .h5
 @st.cache_resource
@@ -10,13 +11,31 @@ def load_model():
 
 model = load_model()
 
-# Afficher la structure du modèle pour vérification
+# Fonction pour sauvegarder le résumé du modèle dans un fichier texte
+def save_model_summary(model, file_path="model_summary.txt"):
+    with open(file_path, "w") as f:
+        model.summary(print_fn=lambda x: f.write(x + "\n"))
+
+# Sauvegarder le résumé du modèle
+save_model_summary(model)
+
+# Lire le résumé du modèle à partir du fichier
+def load_model_summary(file_path="model_summary.txt"):
+    with open(file_path, "r") as f:
+        return f.read()
+
+# Afficher le résumé du modèle dans Streamlit
 st.write("Résumé du modèle :")
-model.summary()
+model_summary = load_model_summary()
+st.text(model_summary)
 
 # Fonction pour prétraiter l'image
 def preprocess_image(image):
     try:
+        # Afficher la taille originale de l'image
+        original_size = image.size
+        st.write(f"Taille originale de l'image : {original_size}")
+
         # Convertir l'image en RGB (supprimer le canal alpha si présent)
         image = image.convert("RGB")
         image = image.resize((224, 224))  # Redimensionner l'image à la taille d'entrée du modèle
