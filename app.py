@@ -4,7 +4,7 @@ import numpy as np
 import tensorflow as tf
 
 # Charger le modèle TensorFlow .h5
-model = tf.keras.models.load_model("mon_modele.h5")
+model = tf.keras.models.load_model("model_classification_dust.h5")
 
 # Fonction pour prétraiter l'image
 def preprocess_image(image):
