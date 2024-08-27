@@ -2,7 +2,6 @@ import streamlit as st
 from PIL import Image
 import numpy as np
 import tensorflow as tf
-import io
 
 # Charger le modèle TensorFlow .h5
 @st.cache_resource
@@ -10,24 +9,6 @@ def load_model():
     return tf.keras.models.load_model("model_classification_dust.h5")
 
 model = load_model()
-
-# Fonction pour sauvegarder le résumé du modèle dans un fichier texte
-def save_model_summary(model, file_path="model_summary.txt"):
-    with open(file_path, "w") as f:
-        model.summary(print_fn=lambda x: f.write(x + "\n"))
-
-# Sauvegarder le résumé du modèle
-save_model_summary(model)
-
-# Lire le résumé du modèle à partir du fichier
-def load_model_summary(file_path="model_summary.txt"):
-    with open(file_path, "r") as f:
-        return f.read()
-
-# Afficher le résumé du modèle dans Streamlit
-st.write("Résumé du modèle :")
-model_summary = load_model_summary()
-st.text(model_summary)
 
 # Fonction pour prétraiter l'image
 def preprocess_image(image):
@@ -38,7 +19,9 @@ def preprocess_image(image):
 
         # Convertir l'image en RGB (supprimer le canal alpha si présent)
         image = image.convert("RGB")
-        image = image.resize((224, 224))  # Redimensionner l'image à la taille d'entrée du modèle
+        
+        # Redimensionner l'image à la taille d'entrée du modèle
+        image = image.resize((498, 498))  # Redimensionner à 498x498
         image = np.array(image)  # Convertir l'image en tableau numpy
         image = image / 255.0  # Normaliser l'image
         image = np.expand_dims(image, axis=0)  # Ajouter une dimension pour le batch
