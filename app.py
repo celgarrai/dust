@@ -13,6 +13,8 @@ model = load_model()
 # Fonction pour prétraiter l'image
 def preprocess_image(image):
     try:
+        # Convertir l'image en RGB (supprimer le canal alpha si présent)
+        image = image.convert("RGB")
         image = image.resize((224, 224))  # Redimensionner l'image à la taille d'entrée du modèle
         image = np.array(image)  # Convertir l'image en tableau numpy
         image = image / 255.0  # Normaliser l'image
