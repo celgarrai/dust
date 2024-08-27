@@ -9,6 +9,9 @@ def load_model():
     return tf.keras.models.load_model("model_classification_dust.h5")
 
 model = load_model()
+
+# Afficher la structure du modèle pour vérification
+st.write("Résumé du modèle :")
 model.summary()
 
 # Fonction pour prétraiter l'image
@@ -20,7 +23,7 @@ def preprocess_image(image):
         image = np.array(image)  # Convertir l'image en tableau numpy
         image = image / 255.0  # Normaliser l'image
         image = np.expand_dims(image, axis=0)  # Ajouter une dimension pour le batch
-
+        
         # Afficher les dimensions pour déboguer
         st.write(f"Dimensions après prétraitement : {image.shape}")
 
@@ -37,6 +40,8 @@ def make_prediction(image, model):
     try:
         # Afficher les dimensions de l'image traitée pour le débogage
         st.write(f"Dimensions de l'image traitée : {processed_image.shape}")
+
+        # Faire une prédiction
         prediction = model.predict(processed_image)
         return prediction[0][0]  # Supposant que le modèle retourne une seule prédiction
     except Exception as e:
