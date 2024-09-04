@@ -2,13 +2,25 @@ import streamlit as st
 from PIL import Image
 import numpy as np
 import tensorflow as tf
+import requests
+from io import BytesIO
 
-# Charger le modèle TensorFlow .h5
+# Charger le modèle TensorFlow .h5 depuis un lien externe
 @st.cache_resource
-def load_model():
-    return tf.keras.models.load_model("model_classification_dust.h5")
+def load_model(url):
+    try:
+        # Télécharger le fichier depuis le lien externe
+        response = requests.get(url)
+        response.raise_for_status()  # Vérifier si la requête a réussi
+        model = tf.keras.models.load_model(BytesIO(response.content))
+        return model
+    except Exception as e:
+        st.error(f"Erreur lors du chargement du modèle : {e}")
+        return None
 
-model = load_model()
+# URL du modèle .h5
+model_url = "https://wis2live.marocmeteo.ma/h5/best_model_seg.h5"
+model = load_model(model_url)
 
 # Fonction pour prétraiter l'image
 def preprocess_image(image):
